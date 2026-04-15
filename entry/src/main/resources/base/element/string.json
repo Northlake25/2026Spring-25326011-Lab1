@@ -1,0 +1,184 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Football Match Recorder"
+    },
+    {
+      "name": "app_name",
+      "value": "足球比赛记录器"
+    },
+    {
+      "name": "home_title",
+      "value": "足球比赛记录器"
+    },
+    {
+      "name": "home_welcome",
+      "value": "欢迎使用足球比赛记录器"
+    },
+    {
+      "name": "home_features",
+      "value": "功能特点："
+    },
+    {
+      "name": "feature_lineup",
+      "value": "记录首发阵容和替补名单"
+    },
+    {
+      "name": "feature_substitution",
+      "value": "实时记录换人调整"
+    },
+    {
+      "name": "feature_goal",
+      "value": "记录进球和助攻"
+    },
+    {
+      "name": "feature_cards",
+      "value": "记录红黄牌"
+    },
+    {
+      "name": "feature_timeline",
+      "value": "按时间记录比赛进程"
+    },
+    {
+      "name": "feature_stats",
+      "value": "自动生成比赛统计数据"
+    },
+    {
+      "name": "button_start_match",
+      "value": "开始记录比赛"
+    },
+    {
+      "name": "matches_title",
+      "value": "比赛列表"
+    },
+    {
+      "name": "new_match_title",
+      "value": "新建比赛"
+    },
+    {
+      "name": "match_name",
+      "value": "比赛名称"
+    },
+    {
+      "name": "home_team",
+      "value": "主队名称"
+    },
+    {
+      "name": "away_team",
+      "value": "客队名称"
+    },
+    {
+      "name": "venue",
+      "value": "比赛场地"
+    },
+    {
+      "name": "match_date",
+      "value": "比赛日期"
+    },
+    {
+      "name": "match_time",
+      "value": "比赛时间"
+    },
+    {
+      "name": "competition",
+      "value": "赛事名称"
+    },
+    {
+      "name": "referee",
+      "value": "裁判"
+    },
+    {
+      "name": "button_cancel",
+      "value": "取消"
+    },
+    {
+      "name": "button_create_match",
+      "value": "创建比赛"
+    },
+    {
+      "name": "button_view_details",
+      "value": "查看详情"
+    },
+    {
+      "name": "button_delete",
+      "value": "删除"
+    },
+    {
+      "name": "match_detail_title",
+      "value": "比赛详情"
+    },
+    {
+      "name": "vs",
+      "value": "VS"
+    },
+    {
+      "name": "match_status",
+      "value": "状态"
+    },
+    {
+      "name": "button_record_event",
+      "value": "记录事件"
+    },
+    {
+      "name": "button_starting_lineup",
+      "value": "首发阵容"
+    },
+    {
+      "name": "button_statistics",
+      "value": "统计数据"
+    },
+    {
+      "name": "timeline_title",
+      "value": "比赛事件时间线"
+    },
+    {
+      "name": "event_goal",
+      "value": "进球"
+    },
+    {
+      "name": "event_yellow_card",
+      "value": "黄牌"
+    },
+    {
+      "name": "event_red_card",
+      "value": "红牌"
+    },
+    {
+      "name": "event_substitution",
+      "value": "换人"
+    },
+    {
+      "name": "event_half_time",
+      "value": "中场休息"
+    },
+    {
+      "name": "event_full_time",
+      "value": "比赛结束"
+    },
+    {
+      "name": "nav_home",
+      "value": "主页"
+    },
+    {
+      "name": "nav_matches",
+      "value": "比赛"
+    },
+    {
+      "name": "nav_new",
+      "value": "新建"
+    },
+    {
+      "name": "nav_settings",
+      "value": "设置"
+    }
+  ]
+}
