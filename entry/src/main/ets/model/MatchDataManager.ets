@@ -5,6 +5,7 @@
 
 import { FootballMatch, Team, Player, MatchEvent, MatchEventType, StartingLineupEvent, SubstitutionEvent, GoalEvent, CardEvent, AppData, generateId, PlayerPosition, MatchStatistics, PlayerMatchStats, TeamStatistics, MatchConfig } from './FootballMatchModel';
 import { DataStorage } from './DataStorage';
+import { FileStorage } from './FileStorage';
 import common from '@ohos.app.ability.common';
 
 export class MatchDataManager {
@@ -15,7 +16,9 @@ export class MatchDataManager {
     players: []
   };
   private dataStorage: DataStorage = DataStorage.getInstance();
+  private fileStorage: FileStorage = FileStorage.getInstance();
   private isInitialized: boolean = false;
+  private useFileStorage: boolean = false; // 是否使用文件存储
 
   private constructor() {
     // 不在这里初始化数据,等待loadData调用
@@ -35,6 +38,7 @@ export class MatchDataManager {
     }
 
     await this.dataStorage.init(context);
+    this.fileStorage.init(context);
 
     // 尝试加载已保存的数据
     const savedData = await this.dataStorage.loadData();
@@ -48,9 +52,96 @@ export class MatchDataManager {
     this.isInitialized = true;
   }
 
+  // 切换存储方式
+  public setUseFileStorage(useFile: boolean): void {
+    this.useFileStorage = useFile;
+  }
+
+  // 设置自定义数据保存路径
+  public setCustomDataPath(path: string): void {
+    this.fileStorage.setCustomDataPath(path);
+  }
+
+  // 设置自定义导出路径
+  public setCustomExportPath(path: string): void {
+    this.fileStorage.setCustomExportPath(path);
+  }
+
+  // 获取当前数据保存路径
+  public getDataPath(): string {
+    return this.fileStorage.getDataPath();
+  }
+
+  // 获取当前导出路径
+  public getExportPath(): string {
+    return this.fileStorage.getExportPath();
+  }
+
   // 保存数据到持久化存储
   public async saveData(): Promise<boolean> {
-    return await this.dataStorage.saveData(this.appData);
+    if (this.useFileStorage) {
+      return await this.fileStorage.saveData(this.appData);
+    } else {
+      return await this.dataStorage.saveData(this.appData);
+    }
+  }
+
+  // 导出所有数据
+  public async exportAllData(filename: string): Promise<string> {
+    return await this.fileStorage.exportData(this.appData, filename);
+  }
+
+  // 导出单个比赛
+  public async exportMatch(matchId: string, filename: string): Promise<string> {
+    const match = this.getMatchById(matchId);
+    if (!match) {
+      throw new Error('比赛不存在');
+    }
+    return await this.fileStorage.exportMatch(match, filename);
+  }
+
+  // 使用文件选择器导出所有数据
+  public async exportAllDataWithPicker(defaultFileName: string): Promise<string> {
+    return await this.fileStorage.saveDataWithPicker(this.appData, defaultFileName);
+  }
+
+  // 使用文件选择器导出单个比赛
+  public async exportMatchWithPicker(matchId: string, defaultFileName: string): Promise<string> {
+    const match = this.getMatchById(matchId);
+    if (!match) {
+      throw new Error('比赛不存在');
+    }
+    return await this.fileStorage.exportMatchWithPicker(match, defaultFileName);
+  }
+
+  // 测试:直接保存到应用目录
+  public async testSaveToAppDir(filename: string): Promise<string> {
+    return await this.fileStorage.testSaveToAppDir(this.appData, filename);
+  }
+
+  // 导出为文本报告
+  public async exportAsTextReport(matchId: string, defaultFileName: string): Promise<string> {
+    const match = this.getMatchById(matchId);
+    if (!match) {
+      throw new Error('比赛不存在');
+    }
+    return await this.fileStorage.exportAsTextReport(match, defaultFileName);
+  }
+
+  // 导入数据
+  public async importData(): Promise<boolean> {
+    try {
+      const data = await this.fileStorage.importDataWithPicker();
+      if (data) {
+        this.appData = data;
+        await this.saveData();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('导入数据失败:', error);
+      throw new Error('导入数据失败');
+    }
   }
 
   // 初始化示例数据
@@ -497,17 +588,5 @@ export class MatchDataManager {
   // 导出数据（用于持久化存储）
   public exportData(): string {
     return JSON.stringify(this.appData, null, 2);
-  }
-
-  // 导入数据（用于从存储恢复）
-  public importData(data: string): boolean {
-    try {
-      const parsedData: AppData = JSON.parse(data) as AppData;
-      this.appData = parsedData;
-      return true;
-    } catch (error) {
-      console.error('导入数据失败:', error);
-      return false;
-    }
   }
 }
