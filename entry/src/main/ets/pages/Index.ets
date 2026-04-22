@@ -30,6 +30,11 @@ struct Index {
   // 数据管理器
   private dataManager: MatchDataManager = MatchDataManager.getInstance();
 
+  // 设置页面状态
+  @State customDataPath: string = '';
+  @State customExportPath: string = '';
+  @State useFileStorage: boolean = false;
+
   // 新建比赛表单数据
   @State homeTeamName: string = '';
   @State awayTeamName: string = '';
@@ -133,6 +138,8 @@ struct Index {
           this.NewMatchPage()
         } else if (this.currentPage === 'matchDetail') {
           this.MatchDetailPage()
+        } else if (this.currentPage === 'settings') {
+          this.SettingsPage()
         }
       }
       .width('100%')
@@ -173,10 +180,10 @@ struct Index {
         Button($r('app.string.nav_settings'))
           .width('25%')
           .height(50)
-          .backgroundColor($r('app.color.primary_color'))
+          .backgroundColor(this.currentPage === 'settings' ? $r('app.color.primary_dark') : $r('app.color.primary_color'))
           .fontColor(Color.White)
           .onClick(() => {
-            this.currentPage = 'home';
+            this.currentPage = 'settings';
           })
       }
       .width('100%')
@@ -206,9 +213,32 @@ struct Index {
         .backgroundColor($r('app.color.success_color'))
         .fontColor(Color.White)
         .fontSize(18)
-        .margin({ bottom: 20 })
+        .margin({ bottom: 10 })
         .onClick(() => {
           this.currentPage = 'newMatch';
+        })
+
+      Button('导入比赛数据')
+        .width('80%')
+        .height(50)
+        .backgroundColor($r('app.color.primary_color'))
+        .fontColor(Color.White)
+        .fontSize(18)
+        .margin({ bottom: 20 })
+        .onClick(async () => {
+          try {
+            const success = await this.dataManager.importData();
+            if (success) {
+              this.refreshMatches();
+              AlertDialog.show({
+                title: '导入成功',
+                message: '比赛数据已成功导入'
+              });
+            }
+          } catch (error) {
+            console.error('导入失败:', error);
+            AlertDialog.show({ message: '导入失败或已取消' });
+          }
         })
 
       // 显示最近的比赛
@@ -1086,95 +1116,113 @@ struct Index {
           .fontWeight(FontWeight.Bold)
           .margin({ bottom: 20 })
 
-        // 事件类型选择
-        Row() {
-          Button('进球')
-            .width('16%')
-            .height(35)
-            .backgroundColor(this.eventType === MatchEventType.GOAL ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => this.eventType = MatchEventType.GOAL)
+        // 使用Scroll包裹内容,使其可滚动
+        Scroll() {
+          Column() {
+            // 事件类型选择 - 分两行显示
+            Column() {
+              // 第一行: 进球、换人、黄牌
+              Row() {
+                Button('进球')
+                  .width('30%')
+                  .height(40)
+                  .backgroundColor(this.eventType === MatchEventType.GOAL ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+                  .fontColor(Color.White)
+                  .onClick(() => this.eventType = MatchEventType.GOAL)
 
-          Button('换人')
-            .width('16%')
-            .height(35)
-            .backgroundColor(this.eventType === MatchEventType.SUBSTITUTION ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => this.eventType = MatchEventType.SUBSTITUTION)
+                Button('换人')
+                  .width('30%')
+                  .height(40)
+                  .backgroundColor(this.eventType === MatchEventType.SUBSTITUTION ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+                  .fontColor(Color.White)
+                  .onClick(() => this.eventType = MatchEventType.SUBSTITUTION)
 
-          Button('黄牌')
-            .width('16%')
-            .height(35)
-            .backgroundColor(this.eventType === MatchEventType.YELLOW_CARD ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => this.eventType = MatchEventType.YELLOW_CARD)
+                Button('黄牌')
+                  .width('30%')
+                  .height(40)
+                  .backgroundColor(this.eventType === MatchEventType.YELLOW_CARD ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+                  .fontColor(Color.White)
+                  .onClick(() => this.eventType = MatchEventType.YELLOW_CARD)
+              }
+              .width('100%')
+              .justifyContent(FlexAlign.SpaceBetween)
+              .margin({ bottom: 10 })
 
-          Button('红牌')
-            .width('16%')
-            .height(35)
-            .backgroundColor(this.eventType === MatchEventType.RED_CARD ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => this.eventType = MatchEventType.RED_CARD)
-          
-          Button('罚丢点球')
-            .width('16%')
-            .height(35)
-            .fontSize(11)
-            .backgroundColor(this.eventType === MatchEventType.PENALTY_MISSED ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => this.eventType = MatchEventType.PENALTY_MISSED)
-          
-          Button('乌龙球')
-            .width('16%')
-            .height(35)
-            .fontSize(11)
-            .backgroundColor(this.eventType === MatchEventType.OWN_GOAL ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => this.eventType = MatchEventType.OWN_GOAL)
+              // 第二行: 红牌、罚丢点球、乌龙球
+              Row() {
+                Button('红牌')
+                  .width('30%')
+                  .height(40)
+                  .backgroundColor(this.eventType === MatchEventType.RED_CARD ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+                  .fontColor(Color.White)
+                  .onClick(() => this.eventType = MatchEventType.RED_CARD)
+                
+                Button('罚丢点球')
+                  .width('30%')
+                  .height(40)
+                  .backgroundColor(this.eventType === MatchEventType.PENALTY_MISSED ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+                  .fontColor(Color.White)
+                  .onClick(() => this.eventType = MatchEventType.PENALTY_MISSED)
+                
+                Button('乌龙球')
+                  .width('30%')
+                  .height(40)
+                  .backgroundColor(this.eventType === MatchEventType.OWN_GOAL ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+                  .fontColor(Color.White)
+                  .onClick(() => this.eventType = MatchEventType.OWN_GOAL)
+              }
+              .width('100%')
+              .justifyContent(FlexAlign.SpaceBetween)
+            }
+            .width('100%')
+            .margin({ bottom: 20 })
+
+            // 比赛时间输入
+            this.FormInput('比赛时间', "如: 45' / 90'(加时) / P(点球大战)", (value) => this.eventMatchTime = value)
+
+            // 根据事件类型显示不同表单
+            if (this.eventType === MatchEventType.GOAL) {
+              this.GoalForm()
+            } else if (this.eventType === MatchEventType.SUBSTITUTION) {
+              this.SubstitutionForm()
+            } else if (this.eventType === MatchEventType.YELLOW_CARD || this.eventType === MatchEventType.RED_CARD) {
+              this.CardForm()
+            } else if (this.eventType === MatchEventType.PENALTY_MISSED || this.eventType === MatchEventType.OWN_GOAL) {
+              this.PenaltyMissedOrOwnGoalForm()
+            }
+
+            // 确认和取消按钮
+            Row() {
+              Button('取消')
+                .width('45%')
+                .height(45)
+                .backgroundColor($r('app.color.text_disabled'))
+                .fontColor(Color.White)
+                .onClick(() => {
+                  this.showEventDialog = false;
+                  this.clearEventData();
+                })
+
+              Button('确认')
+                .width('45%')
+                .height(45)
+                .backgroundColor($r('app.color.success_color'))
+                .fontColor(Color.White)
+                .margin({ left: 10 })
+                .onClick(() => {
+                  this.saveEvent();
+                })
+            }
+            .width('100%')
+            .justifyContent(FlexAlign.SpaceBetween)
+            .margin({ top: 20 })
+          }
+          .width('100%')
         }
         .width('100%')
-        .justifyContent(FlexAlign.SpaceBetween)
-        .margin({ bottom: 20 })
-
-        // 比赛时间输入
-        this.FormInput('比赛时间', "如: 45' / 90'(加时) / P(点球大战)", (value) => this.eventMatchTime = value)
-
-        // 根据事件类型显示不同表单
-        if (this.eventType === MatchEventType.GOAL) {
-          this.GoalForm()
-        } else if (this.eventType === MatchEventType.SUBSTITUTION) {
-          this.SubstitutionForm()
-        } else if (this.eventType === MatchEventType.YELLOW_CARD || this.eventType === MatchEventType.RED_CARD) {
-          this.CardForm()
-        } else if (this.eventType === MatchEventType.PENALTY_MISSED || this.eventType === MatchEventType.OWN_GOAL) {
-          this.PenaltyMissedOrOwnGoalForm()
-        }
-
-        // 确认和取消按钮
-        Row() {
-          Button('取消')
-            .width('45%')
-            .height(45)
-            .backgroundColor($r('app.color.text_disabled'))
-            .fontColor(Color.White)
-            .onClick(() => {
-              this.showEventDialog = false;
-              this.clearEventData();
-            })
-
-          Button('确认')
-            .width('45%')
-            .height(45)
-            .backgroundColor($r('app.color.success_color'))
-            .fontColor(Color.White)
-            .margin({ left: 10 })
-            .onClick(() => {
-              this.saveEvent();
-            })
-        }
-        .width('100%')
-        .justifyContent(FlexAlign.SpaceBetween)
-        .margin({ top: 20 })
+        .height('70%')  // 设置滚动区域高度
+        .scrollable(ScrollDirection.Vertical)
+        .scrollBar(BarState.Auto)
       }
       .width('90%')
       .padding(20)
@@ -1800,5 +1848,269 @@ struct Index {
       console.error('保存比赛失败:', error);
       AlertDialog.show({ message: '保存比赛失败' });
     }
+  }
+
+  // 设置页面
+  @Builder
+  SettingsPage() {
+    Column() {
+      Text('设置')
+        .fontSize(24)
+        .fontWeight(FontWeight.Bold)
+        .margin({ bottom: 20 })
+
+      // 存储方式选择
+      Column() {
+        Text('存储方式')
+          .fontSize(18)
+          .fontWeight(FontWeight.Bold)
+          .margin({ bottom: 10 })
+          .alignSelf(ItemAlign.Start)
+
+        Row() {
+          Button('Preferences存储')
+            .width('45%')
+            .height(40)
+            .backgroundColor(!this.useFileStorage ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+            .fontColor(Color.White)
+            .onClick(() => {
+              this.useFileStorage = false;
+              this.dataManager.setUseFileStorage(false);
+            })
+
+          Button('文件存储')
+            .width('45%')
+            .height(40)
+            .backgroundColor(this.useFileStorage ? $r('app.color.primary_color') : $r('app.color.text_disabled'))
+            .fontColor(Color.White)
+            .onClick(() => {
+              this.useFileStorage = true;
+              this.dataManager.setUseFileStorage(true);
+            })
+        }
+        .width('100%')
+        .justifyContent(FlexAlign.SpaceBetween)
+      }
+      .width('100%')
+      .padding(15)
+      .backgroundColor($r('app.color.card_background'))
+      .borderRadius(8)
+      .margin({ bottom: 20 })
+
+      // 文件存储设置
+      if (this.useFileStorage) {
+        Column() {
+          Text('文件存储设置')
+            .fontSize(18)
+            .fontWeight(FontWeight.Bold)
+            .margin({ bottom: 10 })
+            .alignSelf(ItemAlign.Start)
+
+          // 数据保存路径
+          Column() {
+            Text('数据保存路径')
+              .fontSize(14)
+              .margin({ bottom: 5 })
+              .alignSelf(ItemAlign.Start)
+
+            Row() {
+              TextInput({ placeholder: '输入路径', text: this.customDataPath })
+                .width('70%')
+                .height(40)
+                .onChange((value) => {
+                  this.customDataPath = value;
+                })
+
+              Button('默认')
+                .width('25%')
+                .height(40)
+                .backgroundColor($r('app.color.text_disabled'))
+                .fontColor(Color.White)
+                .onClick(() => {
+                  const context = getContext(this) as common.UIAbilityContext;
+                  this.customDataPath = context.filesDir + '/match_data.json';
+                })
+            }
+            .width('100%')
+            .justifyContent(FlexAlign.SpaceBetween)
+
+            Text(`当前路径: ${this.dataManager.getDataPath()}`)
+              .fontSize(12)
+              .fontColor($r('app.color.text_secondary'))
+              .margin({ top: 5 })
+              .alignSelf(ItemAlign.Start)
+          }
+          .width('100%')
+          .margin({ bottom: 15 })
+
+          // 导出路径
+          Column() {
+            Text('导出路径')
+              .fontSize(14)
+              .margin({ bottom: 5 })
+              .alignSelf(ItemAlign.Start)
+
+            Row() {
+              TextInput({ placeholder: '输入路径', text: this.customExportPath })
+                .width('70%')
+                .height(40)
+                .onChange((value) => {
+                  this.customExportPath = value;
+                })
+
+              Button('默认')
+                .width('25%')
+                .height(40)
+                .backgroundColor($r('app.color.text_disabled'))
+                .fontColor(Color.White)
+                .onClick(() => {
+                  const context = getContext(this) as common.UIAbilityContext;
+                  this.customExportPath = context.filesDir + '/exports/';
+                })
+            }
+            .width('100%')
+            .justifyContent(FlexAlign.SpaceBetween)
+
+            Text(`当前路径: ${this.dataManager.getExportPath()}`)
+              .fontSize(12)
+              .fontColor($r('app.color.text_secondary'))
+              .margin({ top: 5 })
+              .alignSelf(ItemAlign.Start)
+          }
+          .width('100%')
+          .margin({ bottom: 15 })
+
+          // 应用按钮
+          Button('应用设置')
+            .width('100%')
+            .height(45)
+            .backgroundColor($r('app.color.success_color'))
+            .fontColor(Color.White)
+            .onClick(() => {
+              if (this.customDataPath) {
+                this.dataManager.setCustomDataPath(this.customDataPath);
+              }
+              if (this.customExportPath) {
+                this.dataManager.setCustomExportPath(this.customExportPath);
+              }
+              AlertDialog.show({ message: '设置已应用' });
+            })
+        }
+        .width('100%')
+        .padding(15)
+        .backgroundColor($r('app.color.card_background'))
+        .borderRadius(8)
+        .margin({ bottom: 20 })
+      }
+
+      // 导出功能
+      Column() {
+        Text('数据导出')
+          .fontSize(18)
+          .fontWeight(FontWeight.Bold)
+          .margin({ bottom: 10 })
+          .alignSelf(ItemAlign.Start)
+
+        Button('导出所有比赛数据')
+          .width('100%')
+          .height(45)
+          .backgroundColor($r('app.color.primary_color'))
+          .fontColor(Color.White)
+          .margin({ bottom: 10 })
+          .onClick(async () => {
+            try {
+              const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+              const defaultFileName = `all_matches_${timestamp}.json`;
+              const filePath = await this.dataManager.exportAllDataWithPicker(defaultFileName);
+              if (filePath) {
+                AlertDialog.show({
+                  title: '导出成功',
+                  message: `数据已导出到:\n${filePath}`
+                });
+              }
+            } catch (error) {
+              console.error('导出失败:', error);
+              AlertDialog.show({ message: '导出失败或已取消' });
+            }
+          })
+
+        // 测试按钮:直接保存到应用目录
+        Button('测试保存(应用目录)')
+          .width('100%')
+          .height(45)
+          .backgroundColor('#FF9800')
+          .fontColor(Color.White)
+          .margin({ bottom: 10 })
+          .onClick(async () => {
+            try {
+              const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+              const filename = `test_${timestamp}.json`;
+              console.log('开始测试保存');
+              const filePath = await this.dataManager.testSaveToAppDir(filename);
+              console.log('测试保存完成:', filePath);
+              AlertDialog.show({
+                title: '测试保存成功',
+                message: `文件已保存到:\n${filePath}\n\n请检查应用私有目录`
+              });
+            } catch (error) {
+              console.error('测试保存失败:', error);
+              AlertDialog.show({ message: '测试保存失败: ' + error });
+            }
+          })
+
+        if (this.currentMatch) {
+          Button('导出当前比赛')
+            .width('100%')
+            .height(45)
+            .backgroundColor($r('app.color.success_color'))
+            .fontColor(Color.White)
+            .onClick(async () => {
+              try {
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const defaultFileName = `match_${this.currentMatch?.homeTeam.name}_vs_${this.currentMatch?.awayTeam.name}_${timestamp}.json`;
+                const filePath = await this.dataManager.exportMatchWithPicker(this.currentMatch!.id, defaultFileName);
+                if (filePath) {
+                  AlertDialog.show({
+                    title: '导出成功',
+                    message: `比赛数据已导出到:\n${filePath}`
+                  });
+                }
+              } catch (error) {
+                console.error('导出失败:', error);
+                AlertDialog.show({ message: '导出失败或已取消' });
+              }
+            })
+
+          Button('导出为文本报告')
+            .width('100%')
+            .height(45)
+            .backgroundColor('#9C27B0')
+            .fontColor(Color.White)
+            .onClick(async () => {
+              try {
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const defaultFileName = `report_${this.currentMatch?.homeTeam.name}_vs_${this.currentMatch?.awayTeam.name}_${timestamp}.txt`;
+                const filePath = await this.dataManager.exportAsTextReport(this.currentMatch!.id, defaultFileName);
+                if (filePath) {
+                  AlertDialog.show({
+                    title: '导出成功',
+                    message: `文本报告已导出到:\n${filePath}`
+                  });
+                }
+              } catch (error) {
+                console.error('导出失败:', error);
+                AlertDialog.show({ message: '导出失败或已取消' });
+              }
+            })
+        }
+      }
+      .width('100%')
+      .padding(15)
+      .backgroundColor($r('app.color.card_background'))
+      .borderRadius(8)
+    }
+    .width('100%')
+    .height('100%')
+    .padding(16)
   }
 }

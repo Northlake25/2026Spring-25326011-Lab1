@@ -179,6 +179,18 @@
     {
       "name": "nav_settings",
       "value": "设置"
+    },
+    {
+      "name": "permission_read_media_reason",
+      "value": "需要读取媒体文件权限以导出比赛数据"
+    },
+    {
+      "name": "permission_write_media_reason",
+      "value": "需要写入媒体文件权限以保存比赛数据"
+    },
+    {
+      "name": "permission_file_access_reason",
+      "value": "需要文件访问权限以保存和导出比赛数据"
     }
   ]
 }
