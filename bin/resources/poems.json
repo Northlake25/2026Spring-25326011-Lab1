@@ -1,0 +1,65 @@
+{
+    "poems": [
+        {
+            "author": "李白",
+            "dynasty": "唐",
+            "id": "p001",
+            "punctuations": [
+                "，",
+                "，",
+                "，",
+                "。"
+            ],
+            "specialCouplets": [
+            ],
+            "title": "静夜思",
+            "verses": [
+                "床前明月光",
+                "疑是地上霜",
+                "举头望明月",
+                "低头思故乡"
+            ]
+        },
+        {
+            "author": "王之涣",
+            "dynasty": "唐",
+            "id": "p002",
+            "punctuations": [
+                "，",
+                "。",
+                "，",
+                "。"
+            ],
+            "specialCouplets": [
+            ],
+            "title": "登鹳雀楼",
+            "verses": [
+                "白日依山尽",
+                "黄河入海流",
+                "欲穷千里目",
+                "更上一层楼"
+            ]
+        },
+        {
+            "author": "王维",
+            "dynasty": "唐",
+            "id": "p003",
+            "punctuations": [
+                "，",
+                "。",
+                "，",
+                "。"
+            ],
+            "specialCouplets": [
+            ],
+            "title": "相思",
+            "verses": [
+                "红豆生南国",
+                "春来发几枝",
+                "愿君多采撷",
+                "此物最相思"
+            ]
+        }
+    ],
+    "version": "1.0"
+}

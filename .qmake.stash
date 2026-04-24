@@ -1,0 +1,22 @@
+QMAKE_CXX.QT_COMPILER_STDCXX = 199711L
+QMAKE_CXX.QMAKE_GCC_MAJOR_VERSION = 4
+QMAKE_CXX.QMAKE_GCC_MINOR_VERSION = 9
+QMAKE_CXX.QMAKE_GCC_PATCH_VERSION = 2
+QMAKE_CXX.COMPILER_MACROS = \
+    QT_COMPILER_STDCXX \
+    QMAKE_GCC_MAJOR_VERSION \
+    QMAKE_GCC_MINOR_VERSION \
+    QMAKE_GCC_PATCH_VERSION
+QMAKE_CXX.INCDIRS = \
+    C:/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++ \
+    C:/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++/x86_64-w64-mingw32 \
+    C:/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++/backward \
+    C:/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include \
+    C:/MinGW64/include \
+    C:/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include-fixed \
+    C:/MinGW64/x86_64-w64-mingw32/include
+QMAKE_CXX.LIBDIRS = \
+    C:/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2 \
+    C:/MinGW64/lib/gcc \
+    C:/MinGW64/x86_64-w64-mingw32/lib \
+    C:/MinGW64/lib

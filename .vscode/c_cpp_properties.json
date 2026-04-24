@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "D:/Projects/demo/guess_poetry_game/src/ui",
+                "D:/Projects/demo/guess_poetry_game/src/models",
+                "D:/Projects/demo/guess_poetry_game/src/data",
+                "D:/Projects/demo/guess_poetry_game/src/logic",
+                "C:/Qt/6.11.0/mingw_64/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}

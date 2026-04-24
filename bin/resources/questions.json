@@ -1,0 +1,45 @@
+{
+    "questions": [
+        {
+            "category": "",
+            "content": "床前明月光疑是地上霜",
+            "difficulty": 1,
+            "id": "q001",
+            "lowerSentence": "疑是地上霜",
+            "poem_id": "p001",
+            "position": "both",
+            "upperSentence": "床前明月光"
+        },
+        {
+            "category": "",
+            "content": "举头望明月低头思故乡",
+            "difficulty": 1,
+            "id": "q002",
+            "lowerSentence": "低头思故乡",
+            "poem_id": "p001",
+            "position": "both",
+            "upperSentence": "举头望明月"
+        },
+        {
+            "category": "",
+            "content": "白日依山尽黄河入海流",
+            "difficulty": 1,
+            "id": "q003",
+            "lowerSentence": "黄河入海流",
+            "poem_id": "p002",
+            "position": "both",
+            "upperSentence": "白日依山尽"
+        },
+        {
+            "category": "",
+            "content": "欲穷千里目更上一层楼",
+            "difficulty": 1,
+            "id": "q004",
+            "lowerSentence": "更上一层楼",
+            "poem_id": "p002",
+            "position": "both",
+            "upperSentence": "欲穷千里目"
+        }
+    ],
+    "version": "1.0"
+}

@@ -1,0 +1,66 @@
+/* 主窗口样式 */
+QMainWindow {
+    background-color: #f0f0f0;
+}
+
+/* 按钮样式 */
+QPushButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QPushButton:hover {
+    background-color: #45a049;
+}
+
+QPushButton:pressed {
+    background-color: #3d8b40;
+}
+
+/* 输入框样式 */
+QLineEdit {
+    padding: 6px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+QLineEdit:focus {
+    border-color: #4CAF50;
+}
+
+/* 列表样式 */
+QListWidget {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+QListWidget::item {
+    padding: 8px;
+}
+
+QListWidget::item:selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* 标签页样式 */
+QTabWidget::pane {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+QTabBar::tab {
+    background-color: #e0e0e0;
+    padding: 8px 16px;
+    margin-right: 2px;
+}
+
+QTabBar::tab:selected {
+    background-color: #4CAF50;
+    color: white;
+}

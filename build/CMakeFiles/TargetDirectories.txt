@@ -1,0 +1,5 @@
+D:/Projects/demo/guess_poetry_game/build/CMakeFiles/guess_poetry_game.dir
+D:/Projects/demo/guess_poetry_game/build/CMakeFiles/edit_cache.dir
+D:/Projects/demo/guess_poetry_game/build/CMakeFiles/rebuild_cache.dir
+D:/Projects/demo/guess_poetry_game/build/CMakeFiles/guess_poetry_game_autogen_timestamp_deps.dir
+D:/Projects/demo/guess_poetry_game/build/CMakeFiles/guess_poetry_game_autogen.dir

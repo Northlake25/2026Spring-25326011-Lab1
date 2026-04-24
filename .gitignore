@@ -1,0 +1,1 @@
+build/\nrelease/\n*.o\nmoc_*.cpp\nmoc_*.h\nMakefile*
